@@ -81,6 +81,7 @@ def g():
     history_df['prediction'] = history_df.prediction.apply(lambda q: np.argmax(q))
     history_df['prediction'] = history_df.prediction.apply(lambda q: 'Low Quality' if q == 0
                                         else 'Good Quality' if q == 1 else 'High Quality')
+
     df_recent = history_df.tail(4)
     dfi.export(df_recent, './df_recent.png', table_conversion='matplotlib')
     dataset_api.upload("./df_recent.png", "Resources/images", overwrite=True)
@@ -88,7 +89,8 @@ def g():
     predictions = y_pred
     labels = df["quality"]
 
-    results = confusion_matrix(labels, np.argmax(predictions, axis=1))
+    # Take the 150 last elements in the training set and produce a confusion matrix
+    results = confusion_matrix(labels[-500:], np.argmax(predictions, axis=1)[-500:])
 
     df_cm = pd.DataFrame(results, ['True Low Quality', 'True Good Quality', 'True High Quality'],
                          ['Pred Low Quality', 'Pred Good Quality', 'Pred High Quality'])

@@ -30,13 +30,13 @@ model.load_weights(model_dir + '/wine_model.h5')
 print("Model downloaded")
 
 
-def wine(type, alcohol, density, sugar, vol_acid, chlorides, total_sulfur):
+def wine(type, alcohol, density, citric_acid, vol_acid, chlorides, total_sulfur):
     print("Calling function")
     type = 0 if type == 'White' else 1
 
 #     df = pd.DataFrame([[sepal_length],[sepal_width],[petal_length],[petal_width]], 
-    df = pd.DataFrame([[type, vol_acid, sugar, chlorides, total_sulfur, density, alcohol]],
-                      columns=['type', 'volatile acidity', 'sugar', 'chlorides', 'total sulfur dioxide', '´density', 'alcohol'])
+    df = pd.DataFrame([[type, vol_acid, citric_acid, chlorides, total_sulfur, density, alcohol]],
+                      columns=['type', 'volatile acidity', 'citric acid', 'chlorides', 'total sulfur dioxide', '´density', 'alcohol'])
     print("Predicting")
     # 'res' is a list of predictions returned as the label.
     wine_prediction = model.predict(df)
@@ -53,12 +53,12 @@ demo = gr.Interface(
     allow_flagging="never",
     inputs=[
         gr.Radio(["White", "Red"], value='White', label="What kind of wine is it?"),
-        gr.Number(value=9.6, label="Alcohol content (%), normal range 8-15 %"),
-        gr.Number(value=0.9935, label="Density (kg/dm^3), normal range 0.99-0.101 kg/dm^3"),
-        gr.Number(value=1.1, label="Residual sugar content (g/L), normal range 0.6-66 g/L"),
-        gr.Number(value=0.26, label="Volatile acid content (g/L), normal range 0.1 - 1.6 g/L"),
-        gr.Number(value=0.04, label="Chloride content (g/L), normal range 0.01-0.6 g/L"),
-        gr.Number(value=147, label="Total sulfur dioxide content (ppm), normal range 6-450 ppm"),
+        gr.Number(value=12.8, label="Alcohol content (%), normal range 8-15 %"),
+        gr.Number(value=0.9892, label="Density (kg/dm^3), normal range 0.99-0.101 kg/dm^3"),
+        gr.Number(value=0.48, label="Citric acid content (g/L), normal range 0.0-1.7 g/L"),
+        gr.Number(value=0.66, label="Volatile acid content (g/L), normal range 0.1 - 1.6 g/L"),
+        gr.Number(value=0.029, label="Chloride content (g/L), normal range 0.01-0.6 g/L"),
+        gr.Number(value=75., label="Total sulfur dioxide content (ppm), normal range 6-450 ppm"),
         ],
     outputs=gr.Label(num_top_classes=3))
 
