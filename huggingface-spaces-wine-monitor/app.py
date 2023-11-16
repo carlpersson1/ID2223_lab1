@@ -7,7 +7,7 @@ fs = project.get_feature_store()
 dataset_api = project.get_dataset_api()
 wine_pred_fg = fs.get_feature_group(name="wine_predictions", version=1)
 df = wine_pred_fg.read()
-print(df)
+
 latest_pred = df['prediction'].iloc[-1]
 latest_label = df['label'].iloc[-1]
 latest_pred = {'High Quality': float(latest_pred[2]),
