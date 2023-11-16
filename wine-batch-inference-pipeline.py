@@ -1,12 +1,12 @@
 import os
 import modal
     
-LOCAL=True
+LOCAL=False
 
 # Use this function to run on modal once every day
 if LOCAL == False:
-   stub = modal.Stub()
-   hopsworks_image = modal.Image.debian_slim().pip_install(["hopsworks","joblib","seaborn","scikit-learn","dataframe-image", 'numpy'])
+   stub = modal.Stub("wine_batch")
+   hopsworks_image = modal.Image.debian_slim().pip_install(["hopsworks","joblib","seaborn","scikit-learn","dataframe-image", 'numpy', 'tensorflow'])
    @stub.function(image=hopsworks_image, schedule=modal.Period(days=1), secret=modal.Secret.from_name("HOPSWORKS_API_KEY"))
    def f():
        g()
@@ -91,14 +91,15 @@ def g():
     history_df['prediction'] = history_df.prediction.apply(lambda q: 'Low Quality' if q == 0
                                         else 'Good Quality' if q == 1 else 'High Quality')
 
-    df_recent = history_df.tail(4)
+    df_recent = history_df.tail(8)
     dfi.export(df_recent, './df_recent.png', table_conversion='matplotlib')
     dataset_api.upload("./df_recent.png", "Resources/images", overwrite=True)
 
     # Create a confusion matrix of the last 500 elements in the training data.
     predictions = history_df.prediction.apply(lambda q: 0 if q == 'Low Quality'
                                                         else 1 if q == 'Good Quality' else 2)
-    labels = history_df[['label']]
+    labels = history_df.label.apply(lambda q: 0 if q == 'Low Quality'
+                                                        else 1 if q == 'Good Quality' else 2)
 
     # Take the 500 last elements in the training set and produce a confusion matrix, upload it to hopsworks.
     results = confusion_matrix(labels, predictions)

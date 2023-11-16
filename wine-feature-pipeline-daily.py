@@ -1,10 +1,10 @@
 import os
 import modal
 
-LOCAL=True
+LOCAL=False
 
 if LOCAL == False:
-   stub = modal.Stub("iris_daily")
+   stub = modal.Stub("wine_daily")
 
    image = modal.Image.debian_slim().pip_install(["hopsworks", "numpy"])
 
