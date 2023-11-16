@@ -14,7 +14,7 @@ The wine simulation was simply constructed by viewing the sample- mean and stand
 ## Model choice and performance
 For models we considered a simple deep neural network, a gradient boosting classifier and a random forest. In the end we went with ...
 
-![Model confusion matrix on the validation data](https://github.com/carlpersson1/ID2223_lab1/blob/main/wine_model/confusion_matrix.png)
+![Model confusion matrix on the validation data](wine_model/confusion_matrix.png)
 
 ## Batch inference
 This remained very close to the original file from the iris example code. It simply loads and predicts the last added wine from the wine dataset. This wine most likely comes from the wine simulation as it inserts the generated wine into the training dataset. The predicted wine is added to the history of predictions and an image of the last 8 predictions is created, the image contains information on the prediction, true label and date of the prediction. Finally, the history of all predictions is used to create a confusion matrix. The history of predictions, prediction image and confusion matrix is uploaded to hopsworks for use in the apps.
