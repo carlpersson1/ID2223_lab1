@@ -21,7 +21,7 @@ This remained very close to the original file from the iris example code. It sim
 
 ## Apps: Wine predictor and monitor.
 
-The apps are very similar to the original iris predictor and monitor. The predictor interface simply takes the features of a wine as input and makes the trained model predict what quality wine it is. It displays the complete output, including how confident the model is in its prediction. The app is currently hosted on hugging face: ![Wine quality prediction app](https://huggingface.co/spaces/carlpersson/WineQuality)
+The apps are very similar to the original iris predictor and monitor. The predictor interface simply takes the features of a wine as input and makes the trained model predict what quality wine it is. It displays the complete output, including how confident the model is in its prediction. The app is currently hosted on hugging face: [Wine quality prediction app](https://huggingface.co/spaces/carlpersson/WineQuality)
 
-The wine monitor app uses the prediction history, the image of the prediction history and the confusion matrix as outputted by the batch inference pipeline that runs daily. The app specifically displays the details of the last prediction and the images. The app is hosted on hugging face and can be seen here: ![Wine monitor app](https://huggingface.co/spaces/carlpersson/WineMonitor)
+The wine monitor app uses the prediction history, the image of the prediction history and the confusion matrix as outputted by the batch inference pipeline that runs daily. The app specifically displays the details of the last prediction and the images. The app is hosted on hugging face and can be seen here: [Wine monitor app](https://huggingface.co/spaces/carlpersson/WineMonitor)
 
