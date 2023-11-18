@@ -49,7 +49,7 @@ def get_random_wine_quality():
     low_quality_df = generate_wine(0, 0.31, 0.40, 0.19, 0.30, 0.16, 0.065, 0.043, 119, 62, 0.9958, 0.0025, 9.9, 0.84)
 
     # randomly pick one of these 3 and write it to the featurestore
-    pick_random = random.uniform(0, 3)
+    pick_random = random.randint(0, 2)
     if pick_random == 2:
         wine_df = high_quality_df
         print("High Quality Wine added")
