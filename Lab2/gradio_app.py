@@ -3,11 +3,23 @@ import gradio as gr
 import random, string
 
 # Download the model pipeline
-pipe = pipeline(model="sanchit-gandhi/whisper-small-hi")  # change to "your-username/the-name-you-picked"
+pipe = pipeline(model="carlpersson/Whisper-Small-De")  # change to "your-username/the-name-you-picked"
 
 # Create a dictionary of example sentences
-dictionary = {'alright': 'alright', 'यह सच है ।': 'it is true', 'यह झूठ है।': 'it is a lie', 'यह सही है ।': 'it/this is right'}
-
+dictionary = {
+    'Guten Morgen': 'Good morning',
+    'Wie geht es dir': 'How are you',
+    'Ich heiße Thomas': 'My name is Thomas',
+    'Können Sie das bitte wiederholen': 'Can you please repeat that?',
+    'Ich verstehe nicht': 'I do not understand.',
+    'Kann ich Ihnen helfen': 'Can I help you?',
+    'Wo ist die Toilette': 'Where is the bathroom?',
+    'Ich hätte gerne einen Kaffee': 'I would like a coffee.',
+    'Ich lerne Deutsch': 'I am learning German.',
+    'Entschuldigung, wo ist der Bahnhof': 'Excuse me, where is the train station?',
+    'Das Wetter ist heute schön': 'The weather is nice today.',
+    'Ich spreche ein bisschen Deutsch': 'I speak a little German.'
+}
 
 def generate_practice_sentence(difficulty):
     """Generate a random sentence and translation pair from the dictionary"""
@@ -27,23 +39,35 @@ def transcribe(audio):
     return text
 
 
+mispronunced = []
+
+
 async def compare_transcription(hindi_sentence, audio):
     """Returns the transcription and a stylized version where the correctly pronounced words are green and the
     incorrectly pronounced words are red."""
     if audio is None:
         return '', 'Your pronunciation will be evaluated here!'
-    hindi_words = hindi_sentence.split()
+    hindi_words = hindi_sentence.lower().split()
     # Remove punctuation and capital letters to make it easier to recognize well pronounced words
     transcription = transcribe(audio).translate(str.maketrans('', '', string.punctuation)).lower()
     transcribed_words = transcription.split()
     performance = []
     for i, word in enumerate(transcribed_words):
-        color = 'green' if i < len(hindi_words) and word == hindi_words[i] else 'red'
+        if i < len(hindi_words) and word == hindi_words[i]:
+            color = 'green'
+        else:
+            color = 'red'
+            if i < len(hindi_words):
+                mispronunced.append(f'Correct pronunciation: {hindi_words[i]}, Your pronunciation: {word}')
         performance.append(f"<span style='color:{color}; font-size: 20px;'>{word}</span>")
     colored_transcription = ' '.join(performance)
     # Wrapping in a styled div
     styled_transcription = f"Your pronunciation evaluation: {colored_transcription}"
-    return transcription, styled_transcription
+
+    # Create history
+    mispronounced = '\n'.join(mispronunced)
+
+    return transcription, styled_transcription, mispronounced
 
 
 with gr.Blocks() as demo:
@@ -68,7 +92,11 @@ with gr.Blocks() as demo:
 
     # Shows the transcription of what you said and a comparison to what you were supposed to say
     transcription_output = gr.Label(value='', label="Transcribed Text")
-    comparison_output = gr.Markdown('Your pronunciation will be evaluated here!')
+    with gr.Row():
+        with gr.Column():
+            comparison_output = gr.Markdown('Your pronunciation will be evaluated here!')
+        with gr.Column():
+            history = gr.Textbox(value='', label='History of incorrect pronunciation', max_lines=4)
 
     new_sentence_button = gr.Button("New Random Sentence")
 
@@ -94,7 +122,7 @@ with gr.Blocks() as demo:
     submit_button.click(
         compare_transcription,
         inputs=[hindi_sentence, audio_input],
-        outputs=[transcription_output, comparison_output]
+        outputs=[transcription_output, comparison_output, history]
     )
     # Clear the audio
     clear_button.click(
