@@ -26,6 +26,23 @@ a huggingface space: [Pronunciation practice app](https://huggingface.co/spaces/
 ## Ways to further improve the model performance
 Some results of the applied improvements can be found in the training section!
 ### Model-centric approach
+For this approach, the results and improvements used can be found above in the Training section.
 ### Data-centric approach
+For the data-centric approach, the data could be extended with additional voice to text data, which specifically targets the
+expected words that are going to be used. Since, in this case the app helps with pronounciation, it might be a good idea to use very difficult words
+in the training data, that are rather hard to be pronounced. In German there exist a lot of longer words and uncommon pronounicaations. Focusing on those
+improves the model specifically for the use of practicing pronounciation.
 
 ## Feature engineering pipeline and training pipeline
+The notebook provided already contained most of the code that was needed to build a feature pipeline and
+training pipeline. For the feature pipeline, all the code dealing with the preparation of data was grouped together.
+The process simply starts by either fetching the dataset or if it is already stored in the feature store, loading it and preparing it.
+The feature store is in this case a Google Drive space that is simply connected and loaded to the Colab environment. There is functionallity 
+to store the downloaded dataset in the drive, as well as store the processed features. 
+They might be very large, so both unprocesses and processed download options are provided. The feature pipline connects to the drive, loads the data,
+processes it if not already done, and prepares it for the model to be used. 
+The training pipeline consists of loading the model, preparing it, loading the weights if they
+are found, and running training. In addition an evaluation is run to evaluate the model and optionally can be pushed to HuggingFace Hub, 
+which functions as the model registry. The weights stored as checkpoints are also located in the drive, 
+because checkpoints are by default stored in the given output folder found in the training arguments. 
+Finally both feature and training pipeline can be run indepdently.
